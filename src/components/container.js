@@ -1,21 +1,14 @@
+import React, { Component } from 'react'
 import  {
   StyleSheet,
   View,
-  Text,
   PanResponder,
   LayoutAnimation,
-  Alert,
+  ReactNative
 }  from 'react-native'
 
-var NativeModules = require('NativeModules');
-var {
-  UIManager,
-} = NativeModules;
+// const { UIManager } = ReactNative.NativeModules;
 	
-import React,{
-	Component
-} from 'react'
-
 // Modules
 // import TouchManager from '../utils/touchManager'
 import StorageManager from '../utils/localStorageManager'
@@ -29,19 +22,11 @@ import GameContainer from './gameContainer'
 
 // Dimensions
 import Dimensions from '../utils/dimensions'
-const {height, width} = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 // StorageManager
 const storageManager = new StorageManager()
 
-const styles = StyleSheet.create({
-  container: {
-    width,
-    height,
-    backgroundColor: '#faf8ef',
-    paddingHorizontal: Dimensions.size["5"],
-  }
-})
 
 class Container extends Component{
   constructor(props) {
@@ -60,22 +45,22 @@ class Container extends Component{
     })
     this.moving = false;
 	// Animate creation
-    UIManager.setLayoutAnimationEnabledExperimental &&
-      UIManager.setLayoutAnimationEnabledExperimental(true);
+    // UIManager.setLayoutAnimationEnabledExperimental &&
+    //   UIManager.setLayoutAnimationEnabledExperimental(true);
   }
-  _handleStartShouldSetPanResponder(e: Object, gestureState: Object): boolean {
+  _handleStartShouldSetPanResponder(e, gestureState) {
     return true
   }
-  _handleMoveShouldSetPanResponder(e: Object, gestureState: Object): boolean {
+  _handleMoveShouldSetPanResponder(e, gestureState) {
     return true
   }
-  _handlePanResponderGrant(e: Object, gestureState: Object) {
+  _handlePanResponderGrant(e, gestureState) {
     if (this.moving == false) {
         this.moving = true
     }
   }
-  _handlePanResponderMove(e: Object, gestureState: Object) {}
-  _handlePanResponderEnd(e: Object, gestureState: Object) {
+  _handlePanResponderMove(e, gestureState) {}
+  _handlePanResponderEnd(e, gestureState) {
     if (this.moving) {
       this.moving = false
 
@@ -144,9 +129,9 @@ class Container extends Component{
     if (previousState) {
       this.grid        = new Grid(previousState.grid.size, previousState.grid.cells); // Reload grid
       this.score       = parseInt(previousState.score);
-      this.over        = (previousState.over== true ||　previousState.over=='true');
-      this.won         = (previousState.won== true ||　previousState.won=='true');
-      this.keepPlaying = (previousState.keepPlaying== true ||　previousState.keepPlaying=='true');
+      this.over        = (previousState.over== true || previousState.over=='true');
+      this.won         = (previousState.won== true || previousState.won=='true');
+      this.keepPlaying = (previousState.keepPlaying== true || previousState.keepPlaying=='true');
     } else {
       this.grid        = new Grid(this.state.size);
       this.score       = 0;
@@ -382,5 +367,14 @@ class Container extends Component{
     return first.x === second.x && first.y === second.y
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width,
+    height,
+    backgroundColor: '#faf8ef',
+    paddingHorizontal: Dimensions.size["5"],
+  }
+})
 
 export default Container

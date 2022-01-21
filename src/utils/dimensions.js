@@ -4,7 +4,7 @@ import {
 	Platform
 } from 'react-native';
 
-const { width, scale, height, fontScale } = Dimensions.get('window');
+let { width, scale, height, fontScale } = Dimensions.get('window');
 var isIOS = Platform.OS == 'ios';
 var statusBarHeight = isIOS ? 20: StatusBar.currentHeight;
 fontScale = scale;

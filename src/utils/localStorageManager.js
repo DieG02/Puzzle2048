@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-var LocalStorageManager = function() {
+const LocalStorageManager = function() {
   this.bestScoreKey = 'bestScore';
   this.gameStateKey = 'gameState';
   this.storage = AsyncStorage;
