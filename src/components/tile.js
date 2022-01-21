@@ -1,30 +1,47 @@
+import React from 'react'
 import {
   View,
   Text,
   StyleSheet,
 } from 'react-native'
-import React from 'react'
-	
 import Dimensions from '../utils/dimensions'
-const {height, width} = Dimensions.get('window')
 
+function Tile (props) {
+  const tileStyle = props.value<= 2048 ? styles['tile' + props.value] : styles['tilesuper']
+  const tilePositionStyle = {
+    left: props.x * (ITEM_WIDTH + MARGIN_WIDTH * 2) + MARGIN_WIDTH * 2,
+    top: props.y * (ITEM_WIDTH + MARGIN_WIDTH * 2) + MARGIN_WIDTH * 2,
+    width: ITEM_WIDTH,
+    height: ITEM_WIDTH,
+  }
+  const tileTextStyle = props.value<= 2048 ? styles['tile' + props.value + 'Text'] : styles['tilesuperText']
+  return (
+    <View style={[styles.tile, tileStyle, tilePositionStyle]}>
+      <Text style={[ styles.tileText,tileTextStyle]}>
+        {props.value}
+      </Text>
+    </View>
+  )
+}
+
+const { width } = Dimensions.get('window');
 const MARGIN_WIDTH = Dimensions.size["2"]
-const ITEM_WIDTH = (width-Dimensions.size["10"]-MARGIN_WIDTH*10)/4
+const ITEM_WIDTH = (width - Dimensions.size["10"] - MARGIN_WIDTH * 10) / 4
 
 const styles = StyleSheet.create({
-  tile:{
+  tile: {
     position: 'absolute',
     borderRadius: Dimensions.size["1"],
-	flexDirection:"row",
-	justifyContent:"center",
-    alignItems:"center"
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
   },
   tileText: {
     fontSize: Dimensions.size["14"],
     color: '#776E65',
     textAlign: 'center',
-	textAlignVertical:"center",
-	flex:1
+    textAlignVertical: "center",
+    flex: 1
   },
   tile2: {
     backgroundColor: '#eee4da',
@@ -77,7 +94,7 @@ const styles = StyleSheet.create({
   },
   tile512Text: {
     color: '#f9f6f2',
-    fontSize:Dimensions.size["8"],
+    fontSize: Dimensions.size["8"],
   },
   tile1024: {
     backgroundColor: '#edc53f',
@@ -102,21 +119,5 @@ const styles = StyleSheet.create({
     color: '#f9f6f2',
   },
 })
-
-const Tile = (props) => {
-  const tileStyle = props.value<= 2048 ? styles['tile' + props.value] : styles['tilesuper']
-  const tilePositionStyle = {
-    left: props.x*(ITEM_WIDTH+MARGIN_WIDTH*2)+MARGIN_WIDTH*2,
-    top: props.y*(ITEM_WIDTH+MARGIN_WIDTH*2)+MARGIN_WIDTH*2,
-    width: ITEM_WIDTH,
-    height: ITEM_WIDTH,
-  }
-  const tileTextStyle = props.value<= 2048 ? styles['tile' + props.value + 'Text'] : styles['tilesuperText']
-  return (
-    <View style={[styles.tile, tileStyle, tilePositionStyle]}>
-      <Text style={[ styles.tileText,tileTextStyle]}>{props.value}</Text>
-    </View>
-  )
-}
 
 export default Tile

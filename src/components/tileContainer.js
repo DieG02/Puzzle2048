@@ -1,24 +1,9 @@
-import {
-  View,
-  Text,
-} from 'react-native'
 import React from 'react'
+import { View } from 'react-native'
 import Tile from './tile'
 import Dimensions from '../utils/dimensions'
-const {height, width} = Dimensions.get('window')
 
-const styles = {
-  container: {
-    width: width-Dimensions.size["10"],
-    height: width-Dimensions.size["10"],
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    overflow: 'hidden',
-  }
-}
-
-const TileContainer = (props) => {
+function TileContainer (props) {
   const children = props.tiles
   return (
     <View style={styles.container}>
@@ -27,6 +12,18 @@ const TileContainer = (props) => {
       })}
     </View>
   )
+}
+
+const { width } = Dimensions.get('window');
+const styles = {
+  container: {
+    width: width - Dimensions.size["10"],
+    height: width - Dimensions.size["10"],
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    overflow: 'hidden',
+  }
 }
 
 export default TileContainer
