@@ -35,31 +35,31 @@ class Container extends Component{
   }
   componentWillMount() {
     this.setup()
-	var _self = this;
+	  var _self = this;
     this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (e, gestureState)=>_self._handleStartShouldSetPanResponder(e, gestureState),
-      onMoveShouldSetPanResponder: (e, gestureState)=>_self._handleMoveShouldSetPanResponder(e, gestureState),
-      onPanResponderGrant: (e, gestureState)=>_self._handlePanResponderGrant(e, gestureState),
-      onPanResponderMove: (e, gestureState)=>_self._handlePanResponderMove(e, gestureState),
-      onPanResponderRelease: (e, gestureState)=>_self._handlePanResponderEnd(e, gestureState)
+      onStartShouldSetPanResponder: (e, gestureState) => _self._handleStartShouldSetPanResponder(e, gestureState),
+      onMoveShouldSetPanResponder: (e, gestureState) => _self._handleMoveShouldSetPanResponder(e, gestureState),
+      onPanResponderGrant: (e, gestureState) => _self._handlePanResponderGrant(e, gestureState),
+      onPanResponderMove: (e, gestureState) => _self._handlePanResponderMove(e, gestureState),
+      onPanResponderRelease: (e, gestureState) => _self._handlePanResponderEnd(e, gestureState)
     })
     this.moving = false;
 	// Animate creation
     // UIManager.setLayoutAnimationEnabledExperimental &&
     //   UIManager.setLayoutAnimationEnabledExperimental(true);
   }
-  _handleStartShouldSetPanResponder(e, gestureState) {
+  _handleStartShouldSetPanResponder() {
     return true
   }
-  _handleMoveShouldSetPanResponder(e, gestureState) {
+  _handleMoveShouldSetPanResponder() {
     return true
   }
-  _handlePanResponderGrant(e, gestureState) {
+  _handlePanResponderGrant() {
     if (this.moving == false) {
-        this.moving = true
+      this.moving = true
     }
   }
-  _handlePanResponderMove(e, gestureState) {}
+  _handlePanResponderMove() {}
   _handlePanResponderEnd(e, gestureState) {
     if (this.moving) {
       this.moving = false
@@ -77,14 +77,16 @@ class Container extends Component{
   }
   render() {
     var tiles = this.state.tiles?this.state.tiles:[];
-	var _self = this;
-    return (<View {...this._panResponder.panHandlers} style={styles.container} >
-                <Heading score={ this.state.score} best={this.state.best}></Heading>
-                <AboveGame onRestart={()=>_self.restart()}></AboveGame>
-                <GameContainer size={this.state.size} tiles={this.state.tiles} won={this.state.won} over={this.state.over}
-                        onKeepGoing={()=>_self.keepGoing()} onTryAagin={()=>_self.restart()}>
-                </GameContainer>
-            </View>)
+	  var _self = this;
+    return (
+      <View {...this._panResponder.panHandlers} style={styles.container} >
+        <Heading score={ this.state.score} best={this.state.best}></Heading>
+        <AboveGame onRestart={()=>_self.restart()}></AboveGame>
+        <GameContainer size={this.state.size} tiles={this.state.tiles} won={this.state.won} over={this.state.over}
+                onKeepGoing={()=>_self.keepGoing()} onTryAagin={()=>_self.restart()}>
+        </GameContainer>
+      </View>
+    )
   }
   getRandomTiles() {
     var ret = [];
