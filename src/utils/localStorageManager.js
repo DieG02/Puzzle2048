@@ -2,96 +2,92 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LocalStorageManager = function() {
   this.bestScoreKey = 'bestScore';
+  this.bestScoreKey = 'bestScore';
   this.gameStateKey = 'gameState';
-  this.storage = AsyncStorage;
 }
 
-LocalStorageManager.prototype.getItem = function(options){
-  this.storage.getItem(options.key,function(error,result){
-    if(error) {
-      options.error(error);
-    } else{
-      options.success(result);
-    }
+LocalStorageManager.prototype.getItem = async (options) => {
+  const { key, error, success } = options;
+  await AsyncStorage.getItem(key, (err, res) => {
+    if(err) error(err);
+    else success(res);
   });
 }
-LocalStorageManager.prototype.setItem =function(options){
-  this.storage.setItem(options.key,options.value,function(error,result){
-    if(error) {
-      options.error(error);
-    } else{
-      options.success(result);
-    }
-  });
+LocalStorageManager.prototype.setItem = async (options) => {
+  const { key, value, error, success } = options;
+  if(value.length < 5) {
+    await AsyncStorage.setItem(key, value, (err, res) => {
+      if(err) error(err);
+      else success(res);
+    });
+  }
 }
-LocalStorageManager.prototype.removeItem = function(options){
-  this.storage.removeItem(options.key,function(error,result){
-    if(error) {
-      options.error(error);
-    } else{
-      options.success(result);
-    }
+LocalStorageManager.prototype.removeItem = async (options) => {
+  const { key, error, success } = options;
+  await AsyncStorage.removeItem(key, (err, res) => {
+    if(error) error(err);
+    else success(res);
   });
 }
 
 // Best score getters/setters
-LocalStorageManager.prototype.getBestScore = function (callback) {
-  var callback = callback ? callback : function(){};
+LocalStorageManager.prototype.getBestScore = function(cb) {
+  const callback = cb ? cb : () => {};
   this.getItem({
     key: this.bestScoreKey,
-    success: function(result){
-      callback(result && !isNaN(result) ? parseInt(result) : 0);
+    success: (res) => {
+      callback(res ? parseInt(res) : 0);
     },
-    error: function(error){
-      console.log(error);
+    error: (err) => {
+      console.log(err);
     }
   });
 };
-LocalStorageManager.prototype.setBestScore = function (score,callback) {
-  var callback = callback ? callback : function(){};
+LocalStorageManager.prototype.setBestScore = function(score, cb) {
+  const callback = cb ? cb : () => {};
   this.setItem({
     key: this.bestScoreKey,
     value: score.toString(),
     success: callback,
-    error: function(error){
-      console.log(error);
+    error: function(err) {
+      console.log(err);
     }
    });
 };
 
 // Game state getters/setters and clearing
-LocalStorageManager.prototype.getGameState = function (callback) {
+LocalStorageManager.prototype.getGameState = function(callback) {
   return this.getItem({
     key: this.gameStateKey,
-    success: function(result){
-      var state = result ? JSON.parse(result) : null
+    success: function(res) {
+      const state = res ? JSON.parse(res) : null
       callback(state);
     },
-    error: function(error){
-      console.log(error);
+    error: function(err) {
+      console.log(err);
     }
   })
 };
 
-LocalStorageManager.prototype.setGameState = function (gameState,callback) {
-  var callback = callback?callback:function(){};
-  var json = gameState?JSON.stringify(gameState):null;
+LocalStorageManager.prototype.setGameState = function(gameState,cb) {
+  const callback = cb ? cb : () => {};
+  const json = gameState ? JSON.stringify(gameState) : null;
   this.setItem({
-    key: this.bestScoreKey,
+    key: this.gameStateKey,
     value: json,
     success: callback,
-    error: function(error){
-      console.log(error);
+    error: (err) => {
+      console.log(err);
     }
    });
 };
-LocalStorageManager.prototype.clearGameState = function (callback) {
-  var callback = callback ? callback : function(){};
+LocalStorageManager.prototype.clearGameState = function(cb) {
+  const callback = cb ? cb : () => {};
   this.removeItem({
-    key: this.bestScoreKey,
+    key: this.gameStateKey,
     success: callback,
-    error: function(error){
-      console.log(error);
+    error: (err) => {
+      console.log(err);
     }
   });
 };

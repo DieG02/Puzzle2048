@@ -31,7 +31,15 @@ const storageManager = new StorageManager()
 class Container extends Component{
   constructor(props) {
     super(props);
-    this.state = { tiles:[], score:0,over:false,win:false,keepPlaying:false,grid:new Grid(props.size),size:props.size}
+    this.state = { 
+      tiles: [], 
+      score: 0,
+      over: false,
+      win: false,
+      keepPlaying: false,
+      grid: new Grid(props.size),
+      size: props.size
+    }
   }
   componentWillMount() {
     this.setup()
@@ -66,25 +74,34 @@ class Container extends Component{
 
       var dx = gestureState.dx;
       var dy = gestureState.dy;
-      var absDx = dx>0?dx:-dx;
-      var absDy = dy>0?dy:-dy;
-      var canMove = absDx>absDy?absDx-absDy>10:absDx-absDy<-10;
+      var absDx = dx>0 ? dx : -dx;
+      var absDy = dy>0 ? dy : -dy;
+      var canMove = absDx>absDy ? absDx-absDy>10 : absDx-absDy<-10;
       if (canMove) {
         // (right : left) : (down : up)
         this.move(absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
       }
     }
   }
+
   render() {
-    var tiles = this.state.tiles?this.state.tiles:[];
+    var tiles = this.state.tiles ? this.state.tiles : [];
 	  var _self = this;
     return (
-      <View {...this._panResponder.panHandlers} style={styles.container} >
-        <Heading score={ this.state.score} best={this.state.best}></Heading>
-        <AboveGame onRestart={()=>_self.restart()}></AboveGame>
-        <GameContainer size={this.state.size} tiles={this.state.tiles} won={this.state.won} over={this.state.over}
-                onKeepGoing={()=>_self.keepGoing()} onTryAagin={()=>_self.restart()}>
-        </GameContainer>
+      <View {...this._panResponder.panHandlers} style={styles.container}>
+        <Heading
+          score={this.state.score}
+          best={this.state.best}
+        />
+        <AboveGame onRestart={() => _self.restart()}/>
+        <GameContainer
+          size={this.state.size}
+          tiles={this.state.tiles}
+          won={this.state.won}
+          over={this.state.over}
+          onKeepGoing={() => _self.keepGoing()}
+          onTryAagin={() => _self.restart()}
+        />
       </View>
     )
   }
@@ -151,7 +168,7 @@ class Container extends Component{
   // Set up the game
   setup() {
 	var _self = this;
-    storageManager.getGameState((result)=>_self.setGameState(result))
+    storageManager.getGameState((result) => _self.setGameState(result))
   }
   // Set up the initial tiles to start the game with
   addStartTiles() {
@@ -179,7 +196,7 @@ class Container extends Component{
       storageManager.setGameState(this.serialize())
     }
 
-    // this.actuator.actuate(this.grid, {
+    // this.actuate(this.grid, {
     //   score:      this.score,
     //   over:       this.over,
     //   won:        this.won,
@@ -204,13 +221,13 @@ class Container extends Component{
     storageManager.getBestScore(function(bestScore){
 		// Animate the update
 		LayoutAnimation.easeInEaseOut();
-        if (bestScore < _self.score) {
-          storageManager.setBestScore(_self.score);
-          _self.setState({score: _self.score, best: _self.score, tiles: tiles, won: _self.won, over:_self.over});
-        }
-        else {
-          _self.setState({score: _self.score, tiles: tiles, won: _self.won, over:_self.over});
-        }
+      if (bestScore < _self.score) {
+        storageManager.setBestScore(_self.score);
+        _self.setState({score: _self.score, best: _self.score, tiles: tiles, won: _self.won, over:_self.over});
+      }
+      else {
+        _self.setState({..._self, score: _self.score, tiles: tiles, won: _self.won, over:_self.over});
+      }
     });
   }
   // Represent the current game as an object
