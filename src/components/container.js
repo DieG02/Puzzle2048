@@ -3,11 +3,11 @@ import  {
   StyleSheet,
   View,
   PanResponder,
-  LayoutAnimation,
-  ReactNative
+  // LayoutAnimation,
+  UIManager,
+  Platform
 }  from 'react-native'
 
-// const { UIManager } = ReactNative.NativeModules;
 	
 // Modules
 // import TouchManager from '../utils/touchManager'
@@ -53,8 +53,12 @@ class Container extends Component{
     })
     this.moving = false;
 	// Animate creation
-    // UIManager.setLayoutAnimationEnabledExperimental &&
-    //   UIManager.setLayoutAnimationEnabledExperimental(true);
+    if (
+      Platform.OS === "android" &&
+      UIManager.setLayoutAnimationEnabledExperimental
+    ){
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   }
   _handleStartShouldSetPanResponder() {
     return true
@@ -127,7 +131,10 @@ class Container extends Component{
   continueGame() {
     this.won = false;
     this.over = false;
-    this.setState({won: this.won, over: this.over});
+    this.setState({
+      won: this.won,
+      over: this.over
+    });
   }
   restart() {
     storageManager.clearGameState()
@@ -159,10 +166,16 @@ class Container extends Component{
       this.keepPlaying = false;
     }
     var _self =  this;
-    storageManager.getBestScore(function(bestScore){
-		// Animate the update
-		LayoutAnimation.easeInEaseOut();
-        _self.setState({score: _self.score, best: bestScore, tiles: _self.getRandomTiles(), over: _self.over, won: _self.won});
+    storageManager.getBestScore((bestScore) => {
+      // Animate the update
+      // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      _self.setState({
+        score: _self.score,
+        best: bestScore,
+        tiles: _self.getRandomTiles(),
+        over: _self.over,
+        won: _self.won
+      });
     })
   }
   // Set up the game
@@ -218,15 +231,26 @@ class Container extends Component{
       });
     });
     var _self = this;
-    storageManager.getBestScore(function(bestScore){
-		// Animate the update
-		LayoutAnimation.easeInEaseOut();
+    storageManager.getBestScore((bestScore) => {
+      // Animate the update
+      // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       if (bestScore < _self.score) {
         storageManager.setBestScore(_self.score);
-        _self.setState({score: _self.score, best: _self.score, tiles: tiles, won: _self.won, over:_self.over});
+        _self.setState({
+          score: _self.score,
+          best: _self.score,
+          tiles: tiles,
+          won: _self.won,
+          over:_self.over
+        });
       }
       else {
-        _self.setState({..._self, score: _self.score, tiles: tiles, won: _self.won, over:_self.over});
+        _self.setState({
+          score: _self.score, 
+          tiles: tiles, 
+          won: _self.won, 
+          over:_self.over
+        });
       }
     });
   }
@@ -325,7 +349,6 @@ class Container extends Component{
   // Build a list of positions to traverse in the right order
   buildTraversals(vector) {
     var traversals = { x: [], y: [] };
-
     for (var pos = 0; pos < this.state.size; pos++) {
       traversals.x.push(pos);
       traversals.y.push(pos);
